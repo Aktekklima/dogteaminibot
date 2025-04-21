@@ -1,0 +1,103 @@
+import os
+import random
+import time
+from aiogram import Bot, Dispatcher, types
+from aiogram import executor
+from dotenv import load_dotenv
+from aiogram.types import ReplyKeyboardMarkup, KeyboardButton, WebAppInfo
+
+# Load environment variables
+load_dotenv()
+
+# Initialize bot and dispatcher
+bot = Bot(token=os.getenv('BOT_TOKEN'))
+dp = Dispatcher(bot)
+
+# User data storage
+users = {}
+
+class User:
+    def init(self):
+        self.tokens = 0
+        self.xp = 0
+        self.level = 1
+        self.last_mine = 0
+        self.last_daily = 0
+
+def get_user(user_id):
+    if user_id not in users:
+        users[user_id] = User()
+    return users[user_id]
+
+# Web App butonu
+web_app_url = "https://dogtea-mini-app--mehmetcihankara.repl.co"
+keyboard = ReplyKeyboardMarkup(
+    keyboard=[[KeyboardButton(text="🕹️ Play", web_app=WebAppInfo(url=web_app_url))]],
+    resize_keyboard=True
+)
+
+@dp.message_handler(commands=["start"])
+async def start(message: types.Message):
+    user = get_user(message.from_user.id)
+    await message.answer(
+        f"🎮 Dogtea Miner'a Hoş Geldiniz!\n\n"
+        f"💰 Bakiye: {user.tokens} DOGTEA\n"
+        f"📊 Seviye: {user.level}\n"
+        f"✨ XP: {user.xp}",
+        reply_markup=keyboard
+    )
+
+@dp.callback_query_handler(lambda c: c.data == 'mine')
+async def mine_callback(callback_query: types.CallbackQuery):
+    user = get_user(callback_query.from_user.id)
+    now = time.time()
+
+    if now - user.last_mine < 300:
+        remaining = 300 - (now - user.last_mine)
+        await callback_query.answer(f"⏳ {int(remaining)} saniye beklemelisiniz!")
+        return
+
+    tokens = random.randint(5, 15)
+    xp = random.randint(5, 10)
+    user.tokens += tokens
+    user.xp += xp
+    user.last_mine = now
+
+    if user.xp >= user.level * 100:
+        user.level += 1
+        await bot.send_message(callback_query.from_user.id, f"🎉 Seviye {user.level} oldunuz!")
+
+    await callback_query.answer(f"⛏ +{tokens} DOGTEA | +{xp} XP kazandınız!")
+
+@dp.callback_query_handler(lambda c: c.data == 'daily')
+async def daily_callback(callback_query: types.CallbackQuery):
+    user = get_user(callback_query.from_user.id)
+    now = time.time()
+
+    if now - user.last_daily < 86400:
+        remaining = 86400 - (now - user.last_daily)
+        hours = int(remaining // 3600)
+        minutes = int((remaining % 3600) // 60)
+        await callback_query.answer(f"⏳ {hours}s {minutes}d beklemelisiniz!")
+        return
+
+    tokens = random.randint(50, 100)
+    user.tokens += tokens
+    user.last_daily = now
+    await callback_query.answer(f"🎁 Günlük ödül: +{tokens} DOGTEA!")
+
+@dp.callback_query_handler(lambda c: c.data == 'profile')
+async def profile_callback(callback_query: types.CallbackQuery):
+    user = get_user(callback_query.from_user.id)
+    await bot.send_message(
+        callback_query.from_user.id,
+        f"👤 Profil\n\n"
+        f"💰 Bakiye: {user.tokens} DOGTEA\n"
+        f"📊 Seviye: {user.level}\n"
+        f"✨ XP: {user.xp}/{user.level * 100}\n"
+        f"⚡️ Sonraki seviye: {user.level + 1}"
+    )
+
+if name == 'main':
+    print('DogteaMinerBot başlatılıyor...')
+    executor.start_polling(dp, skip_updates=True)

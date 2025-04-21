@@ -1,0 +1,12 @@
+
+{
+    "welcome": "🎮 Welcome to Dogtea Miner!",
+    "mining_cooldown": "⏳ Please wait {minutes} minutes to mine again.",
+    "mining_success": "⛏ Mining successful!\n\n💎 You earned {tokens} DOGTEA!\n✨ +10 XP",
+    "level_up": "🎉 Congratulations! You reached level {level}!",
+    "insufficient_tokens": "❌ You don't have enough DOGTEA!",
+    "purchase_success": "✅ You purchased {item}!",
+    "daily_cooldown": "⏳ Wait {hours} hours {minutes} minutes for next reward.",
+    "daily_reward": "🎁 Your daily reward: +{tokens} DOGTEA!",
+    "referral_reward": "🎉 You invited a new user! Earned +50 DOGTEA!"
+}

@@ -1,0 +1,12 @@
+
+{
+    "welcome": "🎮 Dogtea Miner'a Hoş Geldiniz!",
+    "mining_cooldown": "⏳ Madencilik yapabilmek için {minutes} dakika beklemelisiniz.",
+    "mining_success": "⛏ Madencilik başarılı!\n\n💎 {tokens} DOGTEA kazandınız!\n✨ +10 XP",
+    "level_up": "🎉 Tebrikler! Seviye {level}'e yükseldiniz!",
+    "insufficient_tokens": "❌ Yeterli DOGTEA'nız yok!",
+    "purchase_success": "✅ {item} satın aldınız!",
+    "daily_cooldown": "⏳ Sonraki ödül için {hours} saat {minutes} dakika beklemelisiniz.",
+    "daily_reward": "🎁 Günlük ödülünüz: +{tokens} DOGTEA!",
+    "referral_reward": "🎉 Yeni bir kullanıcı davet ettin! +50 DOGTEA kazandın!"
+}
